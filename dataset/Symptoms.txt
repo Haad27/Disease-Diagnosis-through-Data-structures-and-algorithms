@@ -1,0 +1,10 @@
+Flu | Fever, Cough, Sore throat, Body pain, Fatigue
+COVID-19 | Fever, Cough, Loss of taste, Breathing difficulty, Fatigue
+Typhoid | High fever, Headache, Weakness, Abdominal pain
+Tuberculosis | Persistent cough, Weight loss, Night sweats, Fever
+Malaria | Fever, Chills, Sweating, Headache, Nausea
+Dengue | High fever, Joint pain, Muscle pain, Rash, Headache
+Asthma | Shortness of breath, Wheezing, Chest tightness, Cough
+Diabetes | Frequent urination, Increased thirst, Fatigue, Blurred vision
+Iron Deficiency Anemia | Fatigue, Pale skin, Dizziness, Shortness of breath
+Vitamin D Deficiency | Bone pain, Muscle weakness, Fatigue
