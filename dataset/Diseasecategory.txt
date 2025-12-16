@@ -1,4 +1,4 @@
-Flu | Viral
+Flu | Viral 
 COVID-19 | Viral
 Typhoid | Bacterial
 Tuberculosis | Bacterial
