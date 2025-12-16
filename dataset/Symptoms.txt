@@ -1,4 +1,4 @@
-Flu | Fever, Cough, Sore throat, Body pain, Fatigue
+Flu | fever, Cough, Sore throat, Body pain, Fatigue
 COVID-19 | Fever, Cough, Loss of taste, Breathing difficulty, Fatigue
 Typhoid | High fever, Headache, Weakness, Abdominal pain
 Tuberculosis | Persistent cough, Weight loss, Night sweats, Fever
