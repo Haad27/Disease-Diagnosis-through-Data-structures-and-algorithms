@@ -2,227 +2,241 @@
 #include <fstream>
 using namespace std;
 
-void loadDiseasesFromFile(const string& filename)
-{
-    ifstream file(filename);
-
-    if (!file)
-    {
-        cout << "Error: Could not open file " << filename << endl;
-        return;
-    }
-
-    string diseaseName;
-    int diseaseCount;
-
-    while (file >> diseaseName >> diseaseCount)
-    {
-        Disease d(diseaseName, diseaseCount);
-        root = insert(root, d);
-    }
-
-    file.close();
-    cout << "Diseases loaded successfully from file.\n";
-}
-
-// Disease structure using avl tree
-struct Disease
-{
+struct Disease {
     string name;
     int count;
-
     Disease() {}
-    Disease(string n, int c)
-    {
-        name = n;
-        count = c;
-    }
+    Disease(string n, int c) { name = n; count = c; }
 };
 
-struct Node
-{
+struct Node {
     Disease data;
     Node *left;
     Node *right;
     int height;
-
-    Node(Disease dis) : data(dis), left(NULL), right(NULL), height(1) {}
+    Node(Disease dis) { data = dis; left = NULL; right = NULL; height = 1; }
 };
 
-int getHeight(Node *n)
-{
-    return n ? n->height : 0;
+Node *root = NULL;
+string filename = "dataset/Diseasecategory.txt";
+
+int getHeight(Node *node) {
+    if (node == NULL) return 0;
+    return node->height;
 }
 
-int getBalance(Node *n)
-{
-    return n ? getHeight(n->left) - getHeight(n->right) : 0;
+int getBalance(Node *node) {
+    if (node == NULL) return 0;
+    return getHeight(node->left) - getHeight(node->right);
 }
 
-Node *rightRotate(Node *y)
-{
+Node *rightRotate(Node *y) {
     Node *x = y->left;
     Node *T2 = x->right;
-
     x->right = y;
     y->left = T2;
-
     y->height = max(getHeight(y->left), getHeight(y->right)) + 1;
     x->height = max(getHeight(x->left), getHeight(x->right)) + 1;
-
     return x;
 }
 
-Node *leftRotate(Node *x)
-{
+Node *leftRotate(Node *x) {
     Node *y = x->right;
     Node *T2 = y->left;
-
     y->left = x;
     x->right = T2;
-
     x->height = max(getHeight(x->left), getHeight(x->right)) + 1;
     y->height = max(getHeight(y->left), getHeight(y->right)) + 1;
-
     return y;
 }
 
-Node *insert(Node *root, Disease d)
-{
-    if (!root)
-        return new Node(d);
-
-    if (d.name < root->data.name)
-        root->left = insert(root->left, d);
-    else if (d.name > root->data.name)
-        root->right = insert(root->right, d);
-    else
-    {
-        root->data.count += d.count; // increment count if same disease
-        return root;
+Node *insert(Node *node, Disease d) {
+    if (node == NULL) return new Node(d);
+    if (d.name < node->data.name) node->left = insert(node->left, d);
+    else if (d.name > node->data.name) node->right = insert(node->right, d);
+    else {
+        node->data.count += d.count;
+        return node;
     }
-
-    root->height = 1 + max(getHeight(root->left), getHeight(root->right));
-    int balance = getBalance(root);
-
-    if (balance > 1 && d.name < root->left->data.name)
-        return rightRotate(root);
-    if (balance < -1 && d.name > root->right->data.name)
-        return leftRotate(root);
-    if (balance > 1 && d.name > root->left->data.name)
-    {
-        root->left = leftRotate(root->left);
-        return rightRotate(root);
+    node->height = 1 + max(getHeight(node->left), getHeight(node->right));
+    int balance = getBalance(node);
+    if (balance > 1 && d.name < node->left->data.name) return rightRotate(node);
+    if (balance < -1 && d.name > node->right->data.name) return leftRotate(node);
+    if (balance > 1 && d.name > node->left->data.name) {
+        node->left = leftRotate(node->left);
+        return rightRotate(node);
     }
-    if (balance < -1 && d.name < root->right->data.name)
-    {
-        root->right = rightRotate(root->right);
-        return leftRotate(root);
+    if (balance < -1 && d.name < node->right->data.name) {
+        node->right = rightRotate(node->right);
+        return leftRotate(node);
     }
-
-    return root;
+    return node;
 }
 
-void inorder(Node *root)
-{
-    if (!root)
-        return;
-    inorder(root->left);
-    cout << root->data.name << " (" << root->data.count << ") ";
-    inorder(root->right);
+Node *min_val(Node *node) {
+    Node *current = node;
+    while (current->left != NULL) current = current->left;
+    return current;
 }
 
-void findMostCommon(Node *root, string &name, int &maxCount)
-{
-    if (!root)
-        return;
-
-    if (root->data.count > maxCount)
-    {
-        maxCount = root->data.count;
-        name = root->data.name;
+Node *deleteNode(Node *node, string name) {
+    if (node == NULL) return node;
+    if (name < node->data.name) node->left = deleteNode(node->left, name);
+    else if (name > node->data.name) node->right = deleteNode(node->right, name);
+    else {
+        if ((node->left == NULL) || (node->right == NULL)) {
+            Node *temp = node->left ? node->left : node->right;
+            if (temp == NULL) {
+                temp = node;
+                node = NULL;
+            } else *node = *temp;
+            delete temp;
+        } else {
+            Node *temp = min_val(node->right);
+            node->data = temp->data;
+            node->right = deleteNode(node->right, temp->data.name);
+        }
     }
-
-    findMostCommon(root->left, name, maxCount);
-    findMostCommon(root->right, name, maxCount);
+    if (node == NULL) return node;
+    node->height = 1 + max(getHeight(node->left), getHeight(node->right));
+    int balance = getBalance(node);
+    if (balance > 1 && getBalance(node->left) >= 0) return rightRotate(node);
+    if (balance > 1 && getBalance(node->left) < 0) {
+        node->left = leftRotate(node->left);
+        return rightRotate(node);
+    }
+    if (balance < -1 && getBalance(node->right) <= 0) return leftRotate(node);
+    if (balance < -1 && getBalance(node->right) > 0) {
+        node->right = rightRotate(node->right);
+        return leftRotate(node);
+    }
+    return node;
 }
 
-// now need to figure some way of intermixing the both of these with our task
-
-void add_Disease()
-{
-    cout << "Adding new disease...\n";
+void inorder(Node *node) {
+    if (!node) return;
+    inorder(node->left);
+    cout << node->data.name << " (" << node->data.count << ")\n";
+    inorder(node->right);
 }
 
-void updat_Disease()
-{
-    cout << "Updating existing disease...\n";
+void findMostCommon(Node *node, string &name, int &maxCount) {
+    if (!node) return;
+    if (node->data.count > maxCount) {
+        maxCount = node->data.count;
+        name = node->data.name;
+    }
+    findMostCommon(node->left, name, maxCount);
+    findMostCommon(node->right, name, maxCount);
 }
 
-void delete_Disease()
-{
-    cout << "Deleting disease...\n";
+string trim(const string &s) {
+    size_t a = s.find_first_not_of(" \t\r\n");
+    if (a == string::npos) return "";
+    size_t b = s.find_last_not_of(" \t\r\n");
+    return s.substr(a, b - a + 1);
 }
 
-void view_Diseases()
-{
+void add_Disease() {
+    string name;
+    int count;
+    cout << "Enter disease name: ";
+    getline(cin >> ws, name);
+    cout << "Enter count: ";
+    cin >> count;
+    Disease d(trim(name), count);
+    root = insert(root, d);
+    ofstream file(filename, ios::app);
+    if (file) file << d.name << " | " << d.count << endl;
+    cout << "Disease added successfully.\n";
+}
+
+void updat_Disease() {
+    string name;
+    int newCount;
+    cout << "Enter disease name to update: ";
+    getline(cin >> ws, name);
+    cout << "Enter new count: ";
+    cin >> newCount;
+    Disease d(trim(name), newCount);
+    root = insert(root, d);
+    cout << "Disease updated successfully.\n";
+}
+
+void delete_Disease() {
+    string name;
+    cout << "Enter disease name to delete: ";
+    getline(cin >> ws, name);
+    root = deleteNode(root, trim(name));
+    cout << "Disease deleted successfully.\n";
+}
+
+void view_Diseases() {
     cout << "Showing all diseases...\n";
-    void view_Diseases()
-{
-    if (!root)
-    {
+    if (!root) {
         cout << "No diseases found.\n";
         return;
     }
-
     cout << "Disease List (Inorder Traversal):\n";
     inorder(root);
-    cout << endl;
 }
 
+void Count_Diseases() {
+    string name = "";
+    int maxCount = 0;
+    findMostCommon(root, name, maxCount);
+    if (name == "") cout << "No data available.\n";
+    else cout << "Most common disease: " << name << " (" << maxCount << ")\n";
 }
-void Count_Diseases()
-{
-    // maintians a small dataset of how many times each disease was pridicted
-}
-int main()
-{
-    // Main for calling the functions for adding , updating , deleting , view and exit.
-    int choice;
-    cout << "\nADMIN DISEASE MANAGEMENT\n";
-    cout << "1. Add Disease\n";
-    cout << "2. Update Disease\n";
-    cout << "3. Delete Disease\n";
-    cout << "4. View Disease List\n";
-    cout << "5. Exit\n";
-    cout << "Enter your choice: ";
-    cin >> choice;
 
-    switch (choice)
-    {
-    case 1:
-        add_Disease();
-        break;
-
-    case 2:
-        updat_Disease();
-        break;
-
-    case 3:
-        delete_Disease();
-        break;
-
-    case 4:
-        view_Diseases();
-        break;
-
-    case 5:
-        cout << "Exiting...\n";
-        break;
-
-    default:
-        cout << "Invalid choice. Try again.\n";
+void loadDiseasesFromFile(const string &fname) {
+    ifstream file(fname);
+    if (!file) {
+        cout << "Could not open file " << fname << endl;
+        return;
     }
+    string line;
+    while (getline(file, line)) {
+        string s = trim(line);
+        if (s.empty()) continue;
+        size_t pos = s.find('|');
+        string name;
+        if (pos != string::npos) {
+            name = trim(s.substr(0, pos));
+        } else {
+            name = s;
+        }
+        if (name.empty()) continue;
+        Disease d(name, 1);
+        root = insert(root, d);
+    }
+    file.close();
+    cout << "Diseases loaded successfully from file.\n";
+}
 
+int main() {
+    loadDiseasesFromFile(filename);
+    while (true) {
+        int choice;
+        cout << "\nADMIN DISEASE MANAGEMENT\n";
+        cout << "1. Add Disease\n";
+        cout << "2. Update Disease\n";
+        cout << "3. Delete Disease\n";
+        cout << "4. View Disease List\n";
+        cout << "5. Count Most Common Disease\n";
+        cout << "6. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+        switch (choice) {
+            case 1: add_Disease(); break;
+            case 2: updat_Disease(); break;
+            case 3: delete_Disease(); break;
+            case 4: view_Diseases(); break;
+            case 5: Count_Diseases(); break;
+            case 6: cout << "Exiting...\n"; return 0;
+            default: cout << "Invalid choice. Try again.\n";
+ 
+        }
+    }
     return 0;
 }
