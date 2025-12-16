@@ -39,7 +39,10 @@ class LinkedListS {
     }
 };
 
-
+class Queue {
+    public:
+    
+};
 
 static int maxCount = 0;
 
