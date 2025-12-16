@@ -7,7 +7,7 @@ Dengue | Viral
 Asthma | Chronic
 Diabetes | Chronic
 Iron Deficiency Anemia | Deficiency
-Vitamin D Deficiency | Deficiency
+Vitamin D Deficiency | Deficiency 
 Chickenpox | Viral
 Common Cold | Viral
 Influenza | Viral

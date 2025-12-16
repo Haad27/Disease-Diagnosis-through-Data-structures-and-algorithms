@@ -33,7 +33,7 @@ Syphilis | Painless sore, Rash, Fever, Swollen lymph nodes, Hair loss
 Leprosy | Skin lesions, Numbness, Weak muscles, Enlarged nerves, Nosebleeds
 Giardiasis | Diarrhea, Abdominal cramps, Bloating, Nausea, Fatigue
 Toxoplasmosis | Flu-like symptoms, Swollen lymph nodes, Muscle aches, Fatigue, Headache
-Ascariasis | Abdominal pain, Nausea, Vomiting, Diarrhea, Cough
+Ascariasis | Abdominal pain, Nausea, Vomiting, Diarrhea, Cough 
 Hookworm Infection | Itchy rash, Abdominal pain, Diarrhea, Fatigue, Anemia
 Amoebiasis | Bloody diarrhea, Abdominal pain, Fever, Weight loss, Fatigue
 Trichomoniasis | Itchy genitals, Abnormal discharge, Painful urination, Lower abdominal pain, Discomfort during sex
