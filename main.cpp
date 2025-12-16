@@ -1,6 +1,16 @@
-#include<iostream>
-#include"set2.h"
+#include <iostream>
+#include <vector>
+#include <string>
+#include <fstream>
+#include <algorithm>
+
+#include<sstream>
+#include <unordered_map>
+#include <cctype>
+
 using namespace std;
+#include "set1.hpp"
+#include "set2.hpp"
 
 
 
@@ -36,10 +46,10 @@ int main(){
             exploreCategory();
             break;
         case 3:
-            /* code */
+            predictDisease();
             break;
         case 4:
-            /* code */
+            displayMatchedDiseases();
             break;
         case 5:
             /* code */

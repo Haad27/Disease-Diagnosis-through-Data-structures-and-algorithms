@@ -1,13 +1,7 @@
-#ifndef SET2_H
-#define SET2_H
+#ifndef SET2_HPP
+#define SET2_HPP
 
-#include<iostream>
-#include<vector>
-#include<fstream>
-#include<sstream>
-#include <unordered_map>
-#include <algorithm>
-#include <cctype>
+
 using namespace std;
 
 // used to loads all data from files into linkedlists each node keeping a statmemt

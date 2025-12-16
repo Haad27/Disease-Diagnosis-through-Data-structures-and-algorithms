@@ -1,10 +1,7 @@
-#include <iostream>
-#include <vector>
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <algorithm>
-using namespace std;
+#ifndef SET1_HPP
+#define SET1_HPP
+
+
 
 
 class NodeS {
@@ -145,23 +142,32 @@ vector<Disease> getMatchedDiseases(NodeS* s) {
     return fetchedDiseases;
 }
 
-void displayMatchedDiseases(vector <Disease> mD) {
-    cout << "\nYour symptoms matches these Disease(s):\n";
-    int count = 1;
-    for(Disease d: mD) {
-        bool prevS = false;
-        cout << count << ". " << char(toupper(d.disease[0]));
-        for(int i = 1; i < d.disease.length(); i++) {
-            if(prevS) {
-                cout << char(toupper(d.disease[i]));
-                prevS = false;
-            } else {
-                cout << d.disease[i];
-                if(d.disease[i] == ' ') prevS = true;
+void displayMatchedDiseases() {
+    NodeS* symptoms;
+    symptoms = getSymptomes();
+    if(symptoms != nullptr) {
+        vector <Disease> matchedDiseases;
+        matchedDiseases = getMatchedDiseases(symptoms);
+    
+        cout << "\nYour symptoms matches these Disease(s):\n";
+        int count = 1;
+        for(Disease d: matchedDiseases) {
+            bool prevS = false;
+            cout << count << ". " << char(toupper(d.disease[0]));
+            for(int i = 1; i < d.disease.length(); i++) {
+                if(prevS) {
+                    cout << char(toupper(d.disease[i]));
+                    prevS = false;
+                } else {
+                    cout << d.disease[i];
+                    if(d.disease[i] == ' ') prevS = true;
+                }
             }
+            cout << endl;
+            count++;
         }
-        cout << endl;
-        count++;
+    } else {
+        cout << "You didn't enter any symptom!" << endl;
     }
 }
 
@@ -371,28 +377,40 @@ class QueueS {
 
 QueueS makeQ(vector <Disease> sortedDiseases) {
     QueueS q;
-    for(int i = 0; i < 3; i++) {
+    
+    int limit = 3;
+    if(sortedDiseases.size() < 3) {
+        limit = sortedDiseases.size();
+    }
+
+    for(int i = 0; i < limit; i++) {
         q.push(sortedDiseases[i]);
     }
     return q;
 }
 
-int main() {
+void predictDisease() {
     NodeS* symptoms;
     symptoms = getSymptomes();
+    if(symptoms != nullptr) {
+        vector <Disease> matchedDiseases;
+        matchedDiseases = getMatchedDiseases(symptoms);
 
-    vector <Disease> matchedDiseases;
-    matchedDiseases = getMatchedDiseases(symptoms);
 
-    displayMatchedDiseases(matchedDiseases);
+        vector <Disease> sortedDiseases;
+        sortedDiseases = sortDiseases(matchedDiseases);
+    
+    
 
-    vector <Disease> sortedDiseases;
-    sortedDiseases = sortDiseases(matchedDiseases);
-
-    QueueS q = makeQ(sortedDiseases);
-    q.setCategories();
-    q.setProbs();
-    q.setTandP();
-    q.display();
-
+        QueueS q = makeQ(sortedDiseases);
+        q.setCategories();
+        q.setProbs();
+        q.setTandP();
+        q.display();
+    } else {
+        cout << "You didn't eneter any disease!" << endl;
+    }
 }
+
+
+#endif
