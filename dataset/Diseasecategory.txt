@@ -45,17 +45,8 @@ Pneumonia (Streptococcal) | Bacterial
 Rheumatoid Arthritis | Chronic
 Rickets | Deficiency
 Ringworm | Fungal
-Rotavirus Infection | Viral
-Rubella | Viral
-Scurvy | Deficiency
-Strep Throat | Bacterial
-Stroke | Chronic
-Syphilis | Bacterial
-Tetanus | Bacterial
+Athlete's Foot | Fungal
+Candidiasis | Fungal
+Aspergillosis | Fungal
+Onychomycosis | Fungal
 Tinea Versicolor | Fungal
-Toxoplasmosis | Parasitic
-Trichomoniasis | Parasitic
-Tuberculosis | unknown
-Typhoid | unknown
-Urinary Tract Infection | Bacterial
-Vitamin D Deficiency | Deficiency
